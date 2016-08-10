@@ -181,6 +181,11 @@ class Stage < ActiveRecord::Base
     DeployGroup.enabled? ? deploy_groups.select(:name).sort_by(&:natural_order).map(&:name) : []
   end
 
+  def duplicable!
+    project.duplicable_stage && project.duplicable_stage.update!(duplicable: false)
+    update!(duplicable: true)
+  end
+
   private
 
   def permalink_base

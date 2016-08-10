@@ -2,7 +2,7 @@
 class Api::StagesController < Api::BaseController
   include CurrentProject
 
-  before_action :require_project
+  skip_before_action :require_project, only: :clone
 
   def index
     render json: @project.stages
@@ -17,6 +17,15 @@ class Api::StagesController < Api::BaseController
     else
       render json: new_stage.errors, status: 422
     end
+  end
+
+  def duplicable
+    render json: @project.duplicable_stage
+  end
+
+  def put_duplicable
+    duplicable_stage.duplicable!
+    head :no_content
   end
 
   private
@@ -35,5 +44,9 @@ class Api::StagesController < Api::BaseController
 
   def deploy_groups
     DeployGroup.where(id: deploy_group_ids)
+  end
+
+  def duplicable_stage
+    @project.stages.where(id: params[:id]).first
   end
 end

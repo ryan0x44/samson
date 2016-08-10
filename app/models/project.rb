@@ -43,6 +43,10 @@ class Project < ActiveRecord::Base
 
   scope :search, ->(name) { where("name like ?", "%#{name}%") }
 
+  def duplicable_stage
+    stages.where(duplicable: true)&.first
+  end
+
   def docker_repo
     @docker_repo ||= begin
       registry = Rails.application.config.samson.docker.registry

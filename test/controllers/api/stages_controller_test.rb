@@ -4,6 +4,15 @@ require_relative '../../test_helper'
 SingleCov.covered!
 
 describe Api::StagesController do
+  assert_route verb: "GET", path: "/api/projects/foo/stages",\
+               to: "api/stages#index", params: { project_id: 'foo' }
+  assert_route verb: "POST", path: "/api/stages/foo/clone",\
+               to: "api/stages#clone", params: { stage_id: "foo" }
+  assert_route verb: "GET", path: "/api/projects/foo/duplicable",\
+               to: "api/stages#duplicable", params: { project_id: 'foo' }
+  assert_route verb: "PUT", path: "/api/projects/foo/stages/1/duplicable",\
+               to: "api/stages#put_duplicable", params: { project_id: 'foo', id: "1" }
+
   oauth_setup!
   let(:project) { projects(:test) }
   let(:stages) { project.stages }
@@ -108,6 +117,56 @@ describe Api::StagesController do
     it 'creates a new stage' do
       assert_difference('Stage.count', 1) do
         post :clone, stage_id: stages.first.permalink
+      end
+    end
+  end
+
+  describe '#duplicable' do
+    let(:project) { projects(:test) }
+    let(:duplicable_stage) { project.stages.first }
+
+    before do
+      duplicable_stage.duplicable!
+      get :duplicable, project_id: project.permalink
+    end
+
+    subject { JSON.parse(response.body) }
+
+    it 'succeeds' do
+      assert_response :success
+    end
+
+    it 'uses the StageSerializer' do
+      assert_serializer "StageSerializer"
+    end
+  end
+
+  describe '#put_duplicable' do
+    let(:project) { projects(:test) }
+    let(:duplicable_stage) { project.stages[0] }
+    let(:non_duplicable_stage) { project.stages[1] }
+
+    before do
+      duplicable_stage.duplicable!
+      put :put_duplicable, project_id: project.permalink, id: non_duplicable_stage.id
+    end
+
+    it 'responds with no_content' do
+      assert_response :no_content
+    end
+
+    it 'updates the duplicable stage for that project' do
+      non_duplicable_stage.reload.duplicable?.must_equal true
+      duplicable_stage.reload.duplicable?.must_equal false
+    end
+
+    it 'has only one duplicable_stage' do
+      project.stages.where(duplicable: true).count.must_equal 1
+    end
+
+    describe '#duplicable_stage' do
+      it 'returns the stage for the id passed in' do
+        @controller.send(:duplicable_stage).must_equal non_duplicable_stage
       end
     end
   end

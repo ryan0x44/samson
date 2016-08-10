@@ -61,6 +61,17 @@
     </div>
   </div>
 
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <div class="checkbox">
+        <%= form.label :duplicable do %>
+          <%= form.check_box :duplicable %>
+          This stage can serve as a production template.
+        <% end %>
+      </div>
+    </div>
+  </div>
+
   <% if @project.releases.any? %>
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">

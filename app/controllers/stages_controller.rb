@@ -55,6 +55,7 @@ class StagesController < ApplicationController
   end
 
   def update
+    update_duplicable
     if @stage.update_attributes(stage_params)
       redirect_to [@project, @stage]
     else
@@ -101,5 +102,13 @@ class StagesController < ApplicationController
 
   def find_stage
     @stage = current_project.stages.find_by_param!(params[:id])
+  end
+
+  def duplicable_param
+    @duplicable_param ||= ActiveRecord::Type::Boolean.new.type_cast_from_database(stage_params.delete("duplicable"))
+  end
+
+  def update_duplicable
+    duplicable_param ? @stage.duplicable! : @stage.update_attributes(duplicable: 0)
   end
 end

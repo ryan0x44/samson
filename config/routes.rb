@@ -4,13 +4,25 @@ Samson::Application.routes.draw do
   root to: 'projects#index'
 
   namespace :api do
-    resources :deploys, only: [:index, :active_count] do
+    resources :deploys, only: [:active_count] do
       collection do
         get :active_count
       end
     end
 
-    resources :stages, only: [:index] do
+    resources :projects, param: :project_id, only: [] do
+      get :duplicable, on: :member, to: 'stages#duplicable'
+    end
+
+    resources :projects, only: [:index] do
+      resources :stages, only: [:index] do
+        put :duplicable, on: :member, to: 'stages#put_duplicable'
+      end
+
+      resources :deploys, only: [:index]
+    end
+
+    resources :stages, only: [] do
       post :clone, to: 'stages#clone'
     end
   end

@@ -4,7 +4,11 @@ require_relative '../../test_helper'
 SingleCov.covered!
 
 describe Api::DeploysController do
+  assert_route verb: "GET", path: "/api/deploys/active_count", to: 'api/deploys#active_count'
+  assert_route verb: "GET", path: "/api/projects/foo/deploys", to: 'api/deploys#index', params: {project_id: 'foo'}
+
   oauth_setup!
+
   describe '#active_count' do
     before do
       Deploy.stubs(:active).returns(['a'])

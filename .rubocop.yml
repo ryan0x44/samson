@@ -1,3 +1,6 @@
+FrozenStringLiteralComment:
+  Enabled: false
+
 LineLength:
   Max: 120
 

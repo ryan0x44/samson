@@ -399,6 +399,42 @@ describe Stage do
     end
   end
 
+  describe '#duplicable!' do
+    let(:project) { projects(:test) }
+    let(:stages) { project.stages }
+    let(:duplicable_stage) { stages[0] }
+    let(:new_duplicable_stage) { stages[1] }
+
+    describe 'project' do
+      it 'contains 3 stages' do
+        project.stages.count.must_equal 3
+      end
+
+      describe 'marking the first stage duplicable' do
+        it 'becomes duplicable' do
+          project.duplicable_stage.must_equal nil
+          duplicable_stage.duplicable!
+          project.duplicable_stage.must_equal duplicable_stage
+        end
+
+        describe 'marking a different stage as duplicable' do
+          before do
+            new_duplicable_stage.duplicable!
+          end
+
+          it 'only has one duplicable stage' do
+            project.duplicable_stage.must_equal new_duplicable_stage
+          end
+
+          it 'ensures the previous stage is no longer duplicable' do
+            refute duplicable_stage.reload.duplicable?, "original stage is still duplicable."
+            assert new_duplicable_stage.reload.duplicable?, "new stage is not duplicable."
+          end
+        end
+      end
+    end
+  end
+
   describe '#save' do
     it 'touches the stage and project when only changing deploy_groups for cache invalidation' do
       stage_updated_at = stage.updated_at
