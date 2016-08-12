@@ -18,7 +18,7 @@ class Api::StagesController < Api::BaseController
   end
 
   def duplicable
-    render json: duplicable_stage
+    render json: @project.duplicable_stage
   end
 
   def put_duplicable
