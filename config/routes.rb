@@ -11,7 +11,7 @@ Samson::Application.routes.draw do
     end
 
     resources :projects, param: :project_id, only: [] do
-      get :duplicable, on: :member
+      get :duplicable, on: :member, to: 'stages#duplicable'
     end
 
     resources :projects, only: [:index] do
