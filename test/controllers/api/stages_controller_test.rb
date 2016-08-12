@@ -19,7 +19,7 @@ describe Api::StagesController do
 
   describe 'get #index' do
     before do
-      get :index, project_id: project.permalink
+      get :index, project_id: project.id
     end
 
     subject { JSON.parse(response.body) }
@@ -56,7 +56,7 @@ describe Api::StagesController do
     end
 
     it 'renders a cloned stage' do
-      post :clone, stage_id: stages.first.permalink
+      post :clone, stage_id: stages.first.id
       assert_response :created
     end
 
@@ -69,7 +69,7 @@ describe Api::StagesController do
 
       before do
         stage.deploy_groups_stages.delete_all
-        post :clone, stage_id: stage.permalink, deploy_group_ids: [dg.id], stage_name: 'NewProduction'
+        post :clone, stage_id: stage.id, deploy_group_ids: [dg.id], stage_name: 'NewProduction'
       end
 
       let(:stage) { stages.first }
@@ -99,24 +99,24 @@ describe Api::StagesController do
 
     describe 'when the cloned stage is invalid' do
       before do
-        post :clone, stage_id: stages.first.permalink, stage_name: stages.first.name
+        post :clone, stage_id: stages.first.id, stage_name: stages.first.name
       end
 
       it 'does not clone' do
         assert_difference('Stage.count', 0) do
-          post :clone, stage_id: stages.first.permalink, stage_name: stages.first.name
+          post :clone, stage_id: stages.first.id, stage_name: stages.first.name
         end
       end
 
       it 'includes the errors' do
-        post :clone, stage_id: stages.first.permalink, stage_name: stages.first.name
+        post :clone, stage_id: stages.first.id, stage_name: stages.first.name
         response.body.must_include "already been taken"
       end
     end
 
     it 'creates a new stage' do
       assert_difference('Stage.count', 1) do
-        post :clone, stage_id: stages.first.permalink
+        post :clone, stage_id: stages.first.id
       end
     end
   end
@@ -127,7 +127,7 @@ describe Api::StagesController do
 
     before do
       duplicable_stage.duplicable!
-      get :duplicable, project_id: project.permalink
+      get :duplicable, project_id: project.id
     end
 
     subject { JSON.parse(response.body) }
@@ -148,7 +148,7 @@ describe Api::StagesController do
 
     before do
       duplicable_stage.duplicable!
-      put :put_duplicable, project_id: project.permalink, id: non_duplicable_stage.id
+      put :put_duplicable, project_id: project.id, id: non_duplicable_stage.id
     end
 
     it 'responds with no_content' do

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 class Api::StagesController < Api::BaseController
-  include CurrentProject
-
   skip_before_action :require_project, only: :clone
 
   def index
@@ -31,7 +29,7 @@ class Api::StagesController < Api::BaseController
   private
 
   def stage_to_clone
-    Stage.find_by_param!(params.require(:stage_id))
+    Stage.find_by_id(params.require(:stage_id))
   end
 
   def stage_name

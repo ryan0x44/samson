@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 class Api::DeploysController < Api::BaseController
-  include CurrentProject
-
   skip_before_action :require_project, only: [:active_count]
 
   def index

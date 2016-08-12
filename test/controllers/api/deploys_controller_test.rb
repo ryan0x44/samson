@@ -40,7 +40,7 @@ describe Api::DeploysController do
     let(:changeset) { stub_everything(commits: [], files: [], pull_requests: [], jira_issues: []) }
 
     before do
-      get :index, project_id: project.to_param
+      get :index, project_id: project.id
     end
 
     subject { JSON.parse(response.body) }
@@ -59,7 +59,7 @@ describe Api::DeploysController do
     describe 'when an id is passed in' do
       before do
         deploy2 = deploys(:succeeded_production_test)
-        get :index, project_id: project.to_param, ids: [deploy.id, deploy2.id]
+        get :index, project_id: project.id, ids: [deploy.id, deploy2.id]
       end
 
       it 'succeeds' do
