@@ -4,14 +4,14 @@ require_relative '../../test_helper'
 SingleCov.covered!
 
 describe Api::StagesController do
-  assert_route verb: "GET", path: "/api/projects/foo/stages",\
-               to: "api/stages#index", params: { project_id: 'foo' }
-  assert_route verb: "POST", path: "/api/stages/foo/clone",\
-               to: "api/stages#clone", params: { stage_id: "foo" }
-  assert_route verb: "GET", path: "/api/projects/foo/duplicable",\
-               to: "api/stages#duplicable", params: { project_id: 'foo' }
-  assert_route verb: "PUT", path: "/api/projects/foo/stages/1/duplicable",\
-               to: "api/stages#put_duplicable", params: { project_id: 'foo', id: "1" }
+  assert_route verb: "GET", path: "/api/projects/1/stages",\
+               to: "api/stages#index", params: { project_id: '1' }
+  assert_route verb: "POST", path: "/api/stages/2/clone",\
+               to: "api/stages#clone", params: { stage_id: "2" }
+  assert_route verb: "GET", path: "/api/projects/1/duplicable",\
+               to: "api/stages#duplicable", params: { project_id: '1' }
+  assert_route verb: "PUT", path: "/api/projects/1/stages/2/duplicable",\
+               to: "api/stages#put_duplicable", params: { project_id: '1', id: "2" }
 
   oauth_setup!
   let(:project) { projects(:test) }

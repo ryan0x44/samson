@@ -5,7 +5,7 @@ SingleCov.covered!
 
 describe Api::DeploysController do
   assert_route verb: "GET", path: "/api/deploys/active_count", to: 'api/deploys#active_count'
-  assert_route verb: "GET", path: "/api/projects/foo/deploys", to: 'api/deploys#index', params: {project_id: 'foo'}
+  assert_route verb: "GET", path: "/api/projects/1/deploys", to: 'api/deploys#index', params: {project_id: '1'}
 
   oauth_setup!
 
