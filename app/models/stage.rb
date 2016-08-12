@@ -182,7 +182,8 @@ class Stage < ActiveRecord::Base
   end
 
   def duplicable!
-    project.duplicable_stage && project.duplicable_stage.update!(duplicable: false)
+    old_duplicable_stage = project.duplicable_stage
+    old_duplicable_stage.update!(duplicable: false) if old_duplicable_stage
     update!(duplicable: true)
   end
 

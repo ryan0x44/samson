@@ -18,7 +18,7 @@ class Api::StagesController < Api::BaseController
   end
 
   def duplicable
-    render json: @project.duplicable_stage
+    render json: duplicable_stage
   end
 
   def put_duplicable
@@ -45,6 +45,6 @@ class Api::StagesController < Api::BaseController
   end
 
   def duplicable_stage
-    @project.stages.where(id: params[:id]).first
+    @project.stages.where(id: params[:id]).first!
   end
 end
