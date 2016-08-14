@@ -10,13 +10,21 @@ Samson::Application.routes.draw do
       end
     end
 
+    resources :deploy_groups, only: [:index]
+
     resources :projects, param: :project_id, only: [] do
-      get :duplicable, on: :member, to: 'stages#duplicable'
+      member do
+        get :duplicable, to: 'stages#duplicable'
+      end
     end
 
     resources :projects, only: [:index] do
       resources :stages, only: [:index] do
-        put :duplicable, on: :member, to: 'stages#put_duplicable'
+        member do
+          put :duplicable, to: 'stages#put_duplicable'
+          get :deploy_groups, to: 'deploy_groups#deploy_groups'
+          put :deploy_groups, to: 'deploy_groups#update_deploy_groups'
+        end
       end
 
       resources :deploys, only: [:index]
