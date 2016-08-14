@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class Api::DeployGroupsController < Api::BaseController
   skip_before_action :require_project, only: :index
+  before_action :enabled?
 
   def index
     render json: paginate(DeployGroup.all)
@@ -32,5 +33,11 @@ class Api::DeployGroupsController < Api::BaseController
 
   def production_change?
     stage && stage.production?
+  end
+
+  def enabled?
+    return if DeployGroup.enabled?
+    render json: {message: "DeployGroups are not enabled."}, status: :precondition_failed
+    false
   end
 end
